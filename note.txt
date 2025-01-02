@@ -1,0 +1,2 @@
+$(CC) $(CFLAGS) $(OBJ) -lm $(LIBFT) $(MLX_LIB) $(MLX_FLAGS) -o $(NAME)
+gcc mlx.c mlx/libmlx.a -I mlx -Lmlx -lmlx -lX11 -lXext -o minilibx

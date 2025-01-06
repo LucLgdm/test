@@ -6,7 +6,7 @@
             "type": "shell",
             "command": "gcc",
             "args": [
-                "mlx.c",
+                "mlx_hook.c",
                 "mlx/libmlx.a",
                 "-I", "mlx",
                 "-Lmlx",

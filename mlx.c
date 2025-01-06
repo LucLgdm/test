@@ -11,7 +11,6 @@
 // /* ************************************************************************** */
 
 #include "data.h"
-#include <stdio.h>
 
 int		height, width;
 
@@ -77,6 +76,12 @@ void circle(t_data *img, int center_x, int center_y, float r, int color){
 	}
 }
 
+int	close(int keycode, void *mlx, void *window)
+{
+	mlx_destroy_window(mlx, window);
+	return (0);
+}
+
 int	main(void){
 	void    *mlx;
 	void	*window;
@@ -93,8 +98,6 @@ int	main(void){
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
 			&img.endian);
 
-	printf("heigth = %i, width = %i\nheigth_w = %i, width_w = %i\n", height, width, height_w, width_w);
-
 	int color = create_color(255, 200, 200, 200);
 	// Background
 	for(int x = 0; x <= width_w; x++){
@@ -103,18 +106,21 @@ int	main(void){
 		}
 	}
 
-	color = create_color(255, 50, 150, 125);
-	square(&img, width_w/2 + 150, height_w/2 - 100, 200, color);
-	int color2 = add_shade(0.5, color);
-	square(&img, width_w/2 - 350, height_w/2 - 100, 200, color2);
-	color2 = add_shade(0.75, color);
-	square(&img, width_w/2 - 100, height_w/2 + 150, 200, color2);
-	color2 = get_opposite(color);
-	square(&img, width_w/2 - 100, height_w/2 - 350, 200, color2);
-	color2 = add_shade(0.25, color);
-	circle(&img, width_w/2, height_w/2, 100, color2);
+	// color = create_color(255, 50, 150, 125);
+	// square(&img, width_w/2 + 150, height_w/2 - 100, 200, color);
+	// int color2 = add_shade(0.5, color);
+	// square(&img, width_w/2 - 350, height_w/2 - 100, 200, color2);
+	// color2 = add_shade(0.75, color);
+	// square(&img, width_w/2 - 100, height_w/2 + 150, 200, color2);
+	// color2 = get_opposite(color);
+	// square(&img, width_w/2 - 100, height_w/2 - 350, 200, color2);
+	// color2 = add_shade(0.25, color);
+	// circle(&img, width_w/2, height_w/2, 100, color2);
 
 	mlx_put_image_to_window(mlx, window, img.img, 0, 0);
-    mlx_loop(mlx);	
+
+	mlx_hook(window, 2, 1L<<0, close, &img);
+    mlx_loop(mlx);
+
 	return (0);
 }

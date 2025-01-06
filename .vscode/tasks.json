@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build push_swap",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "mlx.c",
+                "mlx/libmlx.a",
+                "-I", "mlx",
+                "-Lmlx",
+                "-lmlx",
+                "-lX11",
+                "-lXext",
+                "-o", "minilibx",
+                "-g"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}

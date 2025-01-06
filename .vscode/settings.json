@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "*.h": "c"
+    },
+    "C_Cpp.default.compilerPath": "/usr/bin/gcc", 
+    "C_Cpp.default.intelliSenseMode": "gcc-x64",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/includes",
+        "/usr/include",
+        "/usr/local/include"
+    ],
+    "C_Cpp.errorSquiggles": "enabled",
+    "code-runner.runInTerminal": true,
+    "code-runner.executorMap": {
+        "c": "gcc ${file} -o ${fileBasenameNoExtension} && ./${fileBasenameNoExtension}"
+    }
+}

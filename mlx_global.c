@@ -6,7 +6,7 @@
 /*   By: lde-merc <lde-merc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 15:59:19 by lde-merc          #+#    #+#             */
-/*   Updated: 2025/01/06 17:09:07 by lde-merc         ###   ########.fr       */
+/*   Updated: 2025/01/07 09:59:44 by lde-merc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,18 @@ int height_screen, width_screen;
 int main(){
     t_param     param;
     t_data      *data = malloc(sizeof(t_data));
-    t_circle    *circle = malloc(sizeof(t_circle));
-
+    t_circle    *circle = malloc(sizeof(t_circle));  
 
     param.circle = circle;
     param.data = data;
+    
     // Initialisation
     param.mlx = mlx_init();
 	mlx_get_screen_size(param.mlx, &width_screen, &height_screen);
     param.width_w = width_screen / 2;
     param.height_w = height_screen / 2;
-    
+        
+
     // Creation of the window
     param.window = mlx_new_window(param.mlx, param.width_w, param.height_w, "so_long");
     

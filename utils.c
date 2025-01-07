@@ -6,7 +6,7 @@
 /*   By: lde-merc <lde-merc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:24:00 by lde-merc          #+#    #+#             */
-/*   Updated: 2025/01/06 17:16:22 by lde-merc         ###   ########.fr       */
+/*   Updated: 2025/01/07 09:51:30 by lde-merc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,23 +78,29 @@ int		key_handle(int key, void *param){
         printf("Closing window with ESC...\n");
         clean_up_and_exit(par);
     }
-    clear_image(par);
-    if (key == 65362) {
+    
+    if (key == 119) {
+        clear_image(par);
         par->circle->center_y -= 50;
         par->circle->color = 0x00FF0000;
         draw_circle(par->circle, par->data);
     }
-    if (key == 65364) {
+    if (key == 115) {
+        clear_image(par);
         par->circle->center_y += 50;
         par->circle->color = 0x0000FF00;
         draw_circle(par->circle, par->data);
     }
-    if (key == 65361) {
+    if (key == 97) {
+        clear_image(par);
         par->circle->center_x -= 50;
+        par->circle->color = 0x000000FF;
         draw_circle(par->circle, par->data);
     }
-    if (key == 65363) {
+    if (key == 100) {
+        clear_image(par);
         par->circle->center_x += 50;
+        par->circle->color = 0x0000FFFF;
         draw_circle(par->circle, par->data);
     }
     

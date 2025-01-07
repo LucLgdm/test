@@ -6,7 +6,7 @@
 /*   By: lde-merc <lde-merc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 09:59:08 by lde-merc          #+#    #+#             */
-/*   Updated: 2025/01/07 10:06:58 by lde-merc         ###   ########.fr       */
+/*   Updated: 2025/01/07 10:27:23 by lde-merc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int main() {
         fprintf(stderr, "Failed to load image\n");
         return (1);
     }
-
+    
     // Affichage de l'image
     mlx_put_image_to_window(mlx, win, img, 100, 100);
 

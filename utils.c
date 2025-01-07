@@ -6,7 +6,7 @@
 /*   By: lde-merc <lde-merc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:24:00 by lde-merc          #+#    #+#             */
-/*   Updated: 2025/01/07 09:51:30 by lde-merc         ###   ########.fr       */
+/*   Updated: 2025/01/07 10:20:41 by lde-merc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,25 +82,25 @@ int		key_handle(int key, void *param){
     if (key == 119) {
         clear_image(par);
         par->circle->center_y -= 50;
-        par->circle->color = 0x00FF0000;
+        par->circle->color = get_opposite(par->circle->color) - 100;
         draw_circle(par->circle, par->data);
     }
     if (key == 115) {
         clear_image(par);
         par->circle->center_y += 50;
-        par->circle->color = 0x0000FF00;
+        par->circle->color += 1500;
         draw_circle(par->circle, par->data);
     }
     if (key == 97) {
         clear_image(par);
         par->circle->center_x -= 50;
-        par->circle->color = 0x000000FF;
+        par->circle->color = get_opposite(par->circle->color) - 100;
         draw_circle(par->circle, par->data);
     }
     if (key == 100) {
         clear_image(par);
         par->circle->center_x += 50;
-        par->circle->color = 0x0000FFFF;
+        par->circle->color += 1500;
         draw_circle(par->circle, par->data);
     }
     

@@ -6,7 +6,7 @@
 /*   By: lde-merc <lde-merc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 09:59:08 by lde-merc          #+#    #+#             */
-/*   Updated: 2025/01/07 10:27:23 by lde-merc         ###   ########.fr       */
+/*   Updated: 2025/01/07 10:52:26 by lde-merc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,23 @@
 int main() {
     void *mlx;
     void *win;
-    void *img;
-    int img_width, img_height;
+    void **img;
+    int *img_width, *img_height;
+    char **path;
 
 
-    char *path1 = "mlx/test/open.xpm";
-    char *path2 = "mlx/test/open24.xpm";
-    char *path3 = "mlx/test/open30.xpm";
+    img_height = malloc(3 * sizeof(int));
+    img_width = malloc(3 * sizeof(int));
+    
+    path = malloc(3 * sizeof(char *));
+    for (int i = 0; i < 3; i++){
+        path[i] = malloc(50 * sizeof(char));
+    }
+
+    path[0] = "mlx/test/open.xpm";
+    path[1] = "mlx/test/open24.xpm";
+    path[2] = "mlx/test/open30.xpm";
+
     // Initialisation de MiniLibX
     mlx = mlx_init();
     if (!mlx) {
@@ -39,14 +49,21 @@ int main() {
     }
 
     // Chargement de l'image XPM
-    img = mlx_xpm_file_to_image(mlx, path3, &img_width, &img_height);
+    img = malloc(3 * sizeof(void *));
+    for (int i = 0; i < 3; i++){
+         img[i] = malloc (sizeof(void));
+         img[i] = mlx_xpm_file_to_image(mlx, path[i], &img_width[i], &img_height[i]);
+    }
+    
     if (!img) {
         fprintf(stderr, "Failed to load image\n");
         return (1);
     }
     
     // Affichage de l'image
-    mlx_put_image_to_window(mlx, win, img, 100, 100);
+    for (int i = 0; i < 3; i++){
+        mlx_put_image_to_window(mlx, win, img[i], i * 200, i * 200);
+    }
 
     // Boucle d'événements
     mlx_loop(mlx);

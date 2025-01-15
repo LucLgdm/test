@@ -1,0 +1,2 @@
+gcc -lpthread main.c -o main
+https://tala-informatique.fr/index.php?title=C_pthread

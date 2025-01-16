@@ -6,7 +6,7 @@
 /*   By: lde-merc <lde-merc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 13:41:26 by lde-merc          #+#    #+#             */
-/*   Updated: 2025/01/06 16:44:21 by lde-merc         ###   ########.fr       */
+/*   Updated: 2025/01/09 09:31:26 by lde-merc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,15 @@ int	key_handle(int keycode, void *param){
     if (keycode == 65362) { // Flèche haut pour augmenter la taille
         mlx_destroy_window(data->mlx, data->window);
         data->width += 100;
-        data->height += 100;
-        data->window = mlx_new_window(data->mlx, data->width, data->height, "Window Resized");
+        data->height_w += 100;
+        data->window = mlx_new_window(data->mlx, data->width_w, data->height_w, "Window Resized");
     }
     
     if (keycode == 65364) { // Flèche bas pour diminuer la taille
         mlx_destroy_window(data->mlx, data->window);
-        data->width -= 100;
-        data->height -= 100;
-        data->window = mlx_new_window(data->mlx, data->width, data->height, "Window Resized");
+        data->width_w -= 100;
+        data->height_w -= 100;
+        data->window = mlx_new_window(data->mlx, data->width_w, data->height_w, "Window Resized");
     }
     
     printf("Key pressed : %d\n", keycode);
@@ -56,11 +56,11 @@ int mouse_exit(){
 int	main(void){
 	t_param param;
     
-    param.width = 800;
+    param.width_w = 800;
     param.height = 600;
     
     param.mlx = mlx_init();
-	param.window = mlx_new_window(param.mlx, param.width, param.height, "so_long");
+	param.window = mlx_new_window(param.mlx, param.width_w, param.height_w, "so_long");
 
     // mlx_hook(window, event, mask, handler_function, param);
      // handle keyboard

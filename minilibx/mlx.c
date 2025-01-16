@@ -106,16 +106,16 @@ int	main(void){
 		}
 	}
 
-	// color = create_color(255, 50, 150, 125);
-	// square(&img, width_w/2 + 150, height_w/2 - 100, 200, color);
-	// int color2 = add_shade(0.5, color);
-	// square(&img, width_w/2 - 350, height_w/2 - 100, 200, color2);
-	// color2 = add_shade(0.75, color);
-	// square(&img, width_w/2 - 100, height_w/2 + 150, 200, color2);
-	// color2 = get_opposite(color);
-	// square(&img, width_w/2 - 100, height_w/2 - 350, 200, color2);
-	// color2 = add_shade(0.25, color);
-	// circle(&img, width_w/2, height_w/2, 100, color2);
+	color = create_color(255, 50, 150, 125);
+	square(&img, width_w/2 + 150, height_w/2 - 100, 200, color);
+	int color2 = add_shade(0.5, color);
+	square(&img, width_w/2 - 350, height_w/2 - 100, 200, color2);
+	color2 = add_shade(0.75, color);
+	square(&img, width_w/2 - 100, height_w/2 + 150, 200, color2);
+	color2 = get_opposite(color);
+	square(&img, width_w/2 - 100, height_w/2 - 350, 200, color2);
+	color2 = add_shade(0.25, color);
+	circle(&img, width_w/2, height_w/2, 100, color2);
 
 	mlx_put_image_to_window(mlx, window, img.img, 0, 0);
 

@@ -40,14 +40,14 @@ void * reader_thread(void* arg){
 		printf("Data read by the reader thread [%ld] : %d\n", id, data->shared_data);
 		pthread_mutex_unlock(&data->mutex);
 	// Simulate the time for reading
-		usleep(500000);
+		sleep(1);
 	}
 	return NULL;
 }
 
 int main(){
     Data data;
-    int nb_reader = 3;
+    int nb_reader = 5;
 
     // Initialisation
     data.shared_data = 0;

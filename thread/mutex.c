@@ -11,11 +11,9 @@ typedef struct s_mutex{
 
 void	*add(void *arg)
 {
-	t_mutex		*mutex;
-	pthread_t	id;
+	t_mutex		*mutex = (t_mutex *)arg;
+	pthread_t	id = pthread_self();
 
-	mutex = (t_mutex *)arg;
-	id = pthread_self();
 	for (int i = 0; i < 10; i++){
 		pthread_mutex_lock(&mutex->mutex);
 		mutex->data++;
@@ -45,12 +43,13 @@ int	main(void){
 		pthread_create(&thread[i], NULL, &add, (void *)&mutex);
 		printf("Creation du thread[%ld]\n", thread[i]);
 	}
-	for (int i = 0; i < nb_thread; i++)
-		pthread_join(thread[i], NULL);
+	for (int i = 0; i < nb_thread; i++) pthread_join(thread[i], NULL);
+
 	printf("mutex.data = ?\n%i evidemment !!\n", mutex.data);
 	pthread_mutex_destroy(&mutex.mutex);
-	for(int i = 0; i < nb_thread; i++)
-		free(thread[i]);
+
+	for(int i = 0; i < nb_thread; i++) free(thread[i]);
 	free(thread);
+
 	return (0);
 }

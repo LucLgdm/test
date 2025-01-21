@@ -9,6 +9,7 @@
  * several thread will be created only to read the shared data.
  * This data will be modified by the writer thread between 2 reads
  ********************************************************************/
+
 typedef struct
 {
     int shared_data;

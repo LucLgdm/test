@@ -7,7 +7,7 @@
  * The goal of this simulation is a deadlock : 2 threads T1 & T2
  * trying to attempt 2 ressources R1 & R2. While T1 works with R1
  * it needs R2 but R2 is used by T2. This last one needs R1 to
- * go on. THe situation is blocked, this is a deadlock !
+ * go on. The situation is blocked, this is a deadlock !
  *****************************************************************/
 
 pthread_mutex_t mutex_1;

@@ -5,14 +5,14 @@
 #include <fcntl.h>
 
 int main() {
-    sem_t *sem = sem_open("/test_semaphore", O_CREAT, 0644, 3);
+    sem_t *sem = sem_open("/test_semaphore", O_CREAT, 0644, 2);
 
     pid_t pid = fork();
 
     if (pid == 0) {
         sem_wait(sem);
         printf("Enfant 1 utilise la fourchette\n");
-        sleep(2);
+        sleep(5);
         printf("Enfant 1 libère la fourchette\n");
         sem_post(sem);
 		return 0;
@@ -38,9 +38,20 @@ int main() {
 		return 0;
 	}
 
+	pid_t pid4 = fork();
+	if (pid4 == 0){
+        sem_wait(sem);
+        printf("Enfant 4 utilise la fourchette\n");
+        sleep(2);
+        printf("Enfant 4 libère la fourchette\n");
+        sem_post(sem);
+		return 0;
+	}
+	
 	waitpid(pid, NULL, 0);
 	waitpid(pid2, NULL, 0);
 	waitpid(pid3, NULL, 0);
+	waitpid(pid4, NULL, 0);
 
 	sem_close(sem);
 	sem_unlink("/test_semaphore");

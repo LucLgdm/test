@@ -1,1 +1,0 @@
-gcc mlx.c mlx/libmlx.a -I mlx -Lmlx -lmlx -lX11 -lXext -o minilibx

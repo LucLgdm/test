@@ -50,8 +50,11 @@
 
 \033[1mRedirections et tubes\033[0m
 
-    dup, dup2 : Duplication de descripteurs de fichiers.
-    pipe : Création d’un tube pour la communication inter-processus.
+    \033[33mdup, dup2\033[0m : \033[32mDuplication de descripteurs de fichiers.
+	         dup2() specifie quel descripteur de fichier utiliser0 pour stdin, 1 pour stdout\033[0m
+    \033[33mpipe\033[0m      : \033[32mCréation d’un canal de communication entre 2 processus.
+	         Renvoie 2 descripteur de fichier, le premier en lecture et le second en ecriture.
+			 Les tubes permettent de connecter la sortie standard d'un processus à l'entrée standard d'un autre processus.\033[0m
 
 \033[1mGestion des terminaux\033[0m
 

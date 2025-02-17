@@ -1,0 +1,62 @@
+\033[36mCommande a executer -> cat commande.txt | while IFS= read -r line; do echo -e "$line"; done\033[0m
+
+\033[1mGestion de l'entrée/sortie et affichage\033[0m
+
+    \033[36mcc main.c -lreadline\033[0m
+    \033[33minput = readline(prompt)\033[0m               : \033[32mAffiche un prompt et lit l'input utilisateur.\033[0m
+    \033[33madd_history\033[0m                            : \033[32mGarde en memoire les input.\033[0m
+    \033[33mrl_clear_history\033[0m                       : \033[32mEfface l'hisotrique.\033[0m
+    \033[33mrl_on_new_line\033[0m                         : \033[32mIndique a readline qu'on est sur une nouvelle line.\033[0m
+    \033[33mrl_replace_line\033[0m                        : \033[32mEfface la ligne courante.\033[0m
+    \033[33mrl_redisplay\033[0m                           : \033[32mRafraichit le prompt.\033[0m
+    \033[33mprintf\033[0m                                 : \033[32mAffichage formaté.\033[0m
+    \033[33mwrite\033[0m                                  : \033[32mÉcriture brute sur un descripteur de fichier.\033[0m
+
+\033[1mGestion des fichiers\033[0m
+
+    \033[33mint access(const char *path, int mode)\033[0m            : \033[32mVérifie les permissions d’un fichier.
+							 Sortie : 0 = OK sinon -1
+							 Mode : R_OK, W_OK, X_OK, F_OK (read, write, execute, exist)
+						 	 path : chemin du fichier\033[0m
+    \033[33mopen, read, close\033[0m                                 : \033[32mManipulation basique des fichiers.
+							 Renvoie 0 si OK sinon -1\033[0m
+    \033[33mint unlink(const char *path)\033[0m                      : \033[32mSupprime un fichier.\033[0m
+    \033[33mint stat(const char *pathname, struct stat *buf)\033[0m  : \033[32mRécupère des informations sur un fichier normal.\033[0m
+    \033[33mint lstat(const char *pathname, struct stat *buf)\033[0m : \033[32mComme stat() mais ne suit pas les liens symboliques.\033[0m
+    \033[33mint fstat(int fd, struct stat *buf)\033[0m               : \033[32mUtilise un descripteur de fichier.\033[0m
+
+\033[1mProcessus et exécution\033[0m
+
+    \033[33mfork\033[0m                                                                     : \033[32mCrée un processus enfant (cf. Philosopher).\033[0m
+    \033[33mwait, waitpid, wait3, wait4\033[0m                                              : \033[32mAttente de la fin d’un processus (cf. thread).\033[0m
+    \033[33mint execve(const char *pathname, char *const argv[], char *const envp[])\033[0m : \033[32mExécute un nouveau programme.
+										path : chemin absolu du programme a executer /bin/ls ou /usr/bin/cat
+										argv : tableau d'argument a donner au programme,\033[0m \033[31mdoit se terminer par NULL\033[0m
+										\033[32mTableau des variables d'environement a donner au programme,\033[0m \033[31mdoit se terminer par NULL\033[0m 
+
+\033[1mGestion des signaux (cf. minitalk)\033[0m
+
+    \033[33msignal, sigaction\033[0m      : \033[32mGestion des signaux.\033[0m
+    \033[33msigemptyset, sigaddset\033[0m : \033[32mManipulation des ensembles de signaux.\033[0m
+    \033[33mkill\033[0m                   : \033[32mEnvoie un signal à un processus.\033[0m
+
+\033[1mGestion de l'environnement et des chemins\033[0m
+
+    \033[33mgetcwd\033[0m : \033[32mRécupère le chemin du répertoire courant.
+	      Renvoie le chemin du repertoir courant ou NULL et errno = ERANGE si le buffer est trop petit\033[0m
+    \033[33mchdir\033[0m  : \033[32mChange de répertoire
+	      Renvoie 0 si OK.\033[0m
+    \033[33mgetenv\033[0m : \033[32mRécupère la valeur d'une variable d'environnement.\033[0m
+
+\033[1mRedirections et tubes\033[0m
+
+    dup, dup2 : Duplication de descripteurs de fichiers.
+    pipe : Création d’un tube pour la communication inter-processus.
+
+\033[1mGestion des terminaux\033[0m
+
+    isatty : Vérifie si un descripteur est attaché à un terminal.
+    ttyname, ttyslot : Informations sur les terminaux.
+    ioctl : Configuration bas niveau du terminal.
+    tcsetattr, tcgetattr : Configuration des attributs du terminal.
+    tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs : Gestion avancée des terminaux (terminfo).

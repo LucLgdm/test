@@ -51,15 +51,20 @@
 \033[1mRedirections et tubes\033[0m
 
     \033[33mdup, dup2\033[0m : \033[32mDuplication de descripteurs de fichiers.
-	         dup2() specifie quel descripteur de fichier utiliser0 pour stdin, 1 pour stdout\033[0m
+                 dup2() specifie quel descripteur de fichier utiliser0 pour stdin, 1 pour stdout\033[0m
     \033[33mpipe\033[0m      : \033[32mCréation d’un canal de communication entre 2 processus.
-	         Renvoie 2 descripteur de fichier, le premier en lecture et le second en ecriture.
-			 Les tubes permettent de connecter la sortie standard d'un processus à l'entrée standard d'un autre processus.\033[0m
+                 Renvoie 2 descripteur de fichier, le premier en lecture et le second en ecriture.
+                 Les tubes permettent de connecter la sortie standard d'un processus à l'entrée standard d'un autre processus.\033[0m
 
 \033[1mGestion des terminaux\033[0m
 
-    isatty : Vérifie si un descripteur est attaché à un terminal.
-    ttyname, ttyslot : Informations sur les terminaux.
-    ioctl : Configuration bas niveau du terminal.
-    tcsetattr, tcgetattr : Configuration des attributs du terminal.
-    tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs : Gestion avancée des terminaux (terminfo).
+    \033[33misatty\033[0m : \033[32mVérifie si un descripteur est attaché à un terminal.\033[0m
+    \033[33mttyname, ttyslot\033[0m : \033[32mInformations sur les terminaux.\033[0m
+    \033[33mioctl\033[0m : \033[32mContrôle les caractéristiques d'un terminal ou d'un autre périphérique en utilisant des commandes spécifiques.\033[0m
+    \033[33mtcsetattr, tcgetattr\033[0m : \033[32mConfigure et recupere des attributs du terminal.\033[0m
+    \033[33mtgetent\033[0m : \033[32mcharge les informations de description d'un terminal depuis une base de données comme /etc/termcap ou /lib/terminfo\33[0m
+    \033[33mtgetflag\033[0m : \033[32mCette fonction permet de vérifier si une capacité de terminal est un flag (une capacité booléenne) ou non.\33[0m
+    \033[33mtgetnum\033[0m : \033[32mCette fonction permet d'obtenir une capacité numérique d'un terminal.\33[0m
+    \033[33mtgetstr\033[0m : \033[32mCette fonction permet d'obtenir une capacité de terminal sous forme de chaîne de caractères.\33[0m
+    \033[33mtgoto\033[0m : \033[32mCette fonction permet de générer une séquence d'échappement pour déplacer le curseur à une position donnée.\33[0m
+    \033[33mtputs\033[0m : \033[32mCette fonction permet d'envoyer une séquence d'échappement vers le terminal pour effectuer une action, comme déplacer le curseur, changer de couleur, etc.\033[0m

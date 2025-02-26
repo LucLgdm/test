@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <signal.h>
 
 
 void print_tab(char **tab) {
@@ -12,24 +13,72 @@ void print_tab(char **tab) {
     printf("\n");
 }
 
+void execute_pipe(char **cmd, char **next_cmd, char **env){
+    int pipe_fd[2];
+    pid_t pid_1, pid_2;
 
-void execute_command(char **cmd, char **env){
-	if (!cmd || !cmd[0])
-        return;
-	
-	pid_t pid = fork();
-	if (pid == -1){
+    if (pipe(pipe_fd) == -1) {
+        perror("error: fatal");
+        exit(1);
+    }
+    
+    pid_1 = fork();
+    if (pid_1 == -1) {
         perror("error: fatal");
         exit(1);
     }
 
-	if (pid == 0){
-		execve(cmd[0], cmd, env);
+    if (pid_1 == 0) {  // Enfant pour cmd1
+        dup2(pipe_fd[1], STDOUT_FILENO);
+        close(pipe_fd[0]);
+        close(pipe_fd[1]);
+
+        if (execve(cmd[0], cmd, env) == -1){
+            fprintf(stderr, "error: cannot execute %s\n", cmd[0]);
+            exit(1);
+        }
+    }
+
+    pid_2 = fork();
+    if (pid_2 == -1) {
+        perror("error: fatal");
+        exit(1);
+    }
+
+    if (pid_2 == 0) {  // Enfant pour next_cmd
+        dup2(pipe_fd[0], STDIN_FILENO);
+        close(pipe_fd[0]);
+        close(pipe_fd[1]);
+
+        execve(next_cmd[0], next_cmd, env);
+        fprintf(stderr, "error: cannot execute %s\n", next_cmd[0]);
+        exit(1);
+    }
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
+    
+    waitpid(pid_1, NULL, 0);
+    waitpid(pid_2, NULL, 0);
+}
+
+
+
+void execute_command(char **cmd, char **env){
+	if (!cmd || !cmd[0])
+        return;
+	pid_t pid_1 = fork();
+	if (pid_1 == -1){
+        perror("error: fatal");
+        exit(1);
+    }
+
+	if (pid_1 == 0){
+        execve(cmd[0], cmd, env);
 		fprintf(stderr, "error: cannot execute %s\n", cmd[0]);
         exit(1);
-	} else {
-		waitpid(pid, NULL, 0);
 	}
+
+    waitpid(pid_1, NULL, 0);
 }
 
 char **extract_command(char **argv, int *i) {
@@ -56,7 +105,8 @@ char **extract_command(char **argv, int *i) {
     }
     cmd[count] = NULL;
 
-    if (argv[*i] && (strncmp(argv[*i], ";", 1) == 0 || strncmp(argv[*i], "|", 1) == 0)) {
+
+    if (argv[*i] && (strncmp(argv[*i], ";", 1) == 0 )) {
         (*i)++;
     }
 
@@ -76,7 +126,16 @@ int main(int argc, char **argv, char **env) {
     while (i < argc) {
         cmd = extract_command(argv, &i);
         if (cmd && *cmd) {
-            execute_command(cmd, env);
+            if (argv[i] && strcmp(argv[i], "|") == 0) {
+                i++;
+                char **next_cmd = extract_command(argv, &i);
+                if (next_cmd && *next_cmd) {
+                    execute_pipe(cmd, next_cmd, env);
+                }
+                free_tab(next_cmd);
+            } else {
+                execute_command(cmd, env);
+            }
 			free_tab(cmd);
         }
     }

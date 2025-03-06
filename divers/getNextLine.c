@@ -114,7 +114,7 @@ char *ft_update(char *buffer)
         i++;
 
     if (!buffer[i])
-        return (free(buffer), NULL);
+        return (buffer);
 
     char *output = malloc((ft_strlen(buffer) - i) * sizeof(char));
     if (!output)
@@ -144,7 +144,7 @@ char *ft_free_and_join(char *buffer, char *str)
     int len_str = ft_strlen(str);
     char *joined = malloc((len_buffer + len_str + 1) * sizeof(char));
     if (!joined)
-        return NULL;
+        return (free(buffer),NULL);
 
     int i = 0, j = 0;
     while (i < len_buffer)
@@ -159,7 +159,7 @@ char *ft_free_and_join(char *buffer, char *str)
     }
     joined[i + j] = '\0';
 
-    free(buffer);
+    free(buffer - len_buffer);
     return (joined);
 }
 
@@ -170,7 +170,7 @@ char *ft_strchr(char *str, char c)
     {
         if (str[i] == c)
             return (&str[i]);
-    i++;
+        i++;
     }
     return NULL;
 }

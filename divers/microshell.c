@@ -59,6 +59,9 @@ void execute_pipe(char **cmd, char **next_cmd, char **env){
     
     waitpid(pid_1, NULL, 0);
     waitpid(pid_2, NULL, 0);
+    
+    kill(pid_1, SIGKILL);
+    kill(pid_2, SIGKILL);
 }
 
 
@@ -79,6 +82,7 @@ void execute_command(char **cmd, char **env){
 	}
 
     waitpid(pid_1, NULL, 0);
+    kill(pid_1, SIGKILL);
 }
 
 char **extract_command(char **argv, int *i) {
@@ -104,7 +108,6 @@ char **extract_command(char **argv, int *i) {
         }
     }
     cmd[count] = NULL;
-
 
     if (argv[*i] && (strncmp(argv[*i], ";", 1) == 0 )) {
         (*i)++;

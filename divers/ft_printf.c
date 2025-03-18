@@ -20,7 +20,8 @@ int main(){
 	
 	ft_printf("Magic %s is %d\n", "number", 42);
 
-	ft_printf("Hexadecimal for %d is %x  ", 42, 42);
+	ft_printf("Hexadecimal for %d is %x\n", 42, 42);
+	return 0;
 }
 
 

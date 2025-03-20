@@ -3,133 +3,100 @@
 #include <unistd.h>
 
 
-int ft_printf(const char *str, ...);
-void put_str(char *str, int *counter);
-void put_nbr(int n, int *counter);
-void put_hexa(int n, int *counter);
-void	ft_putchar(char c);
-void	ft_putstr(char *str);
-int	ft_strlen(char *str);
-int ft_nbrlen(int n);
-void ft_putnbr(int n);
-
-
-int main(){
-	
-	ft_printf("%s\n", "toto");
-	
-	ft_printf("Magic %s is %d\n", "number", 42);
-
-	ft_printf("Hexadecimal for %d is %x\n", 42, 42);
-	return 0;
-}
-
-
-int ft_printf(const char *str, ...){
-	va_list list;
+void ft_put_str(const char *str, int *counter){
 	int i = -1;
-	int counter = 0;
 
-	if (!str)
-		return (counter - 1);
-	va_start(list, str);
-	while (str[++i])
-	{
-		if (str[i] == '%' && str[i + 1]){
-			i++;
-			switch (str[i])
-			{
-			case 's':
-				put_str(va_arg(list, char *), &counter);
-				break;
-			case 'd':
-				put_nbr(va_arg(list, int), &counter);
-				break;
-			case 'x':
-				put_hexa(va_arg(list, int), &counter);
-				break;
-			default:
-				break;
-			}
-		}else {
-			write(1, &str[i], 1);
-			counter++;
-		}
-	}
-	va_end(list);
-	return (counter);
-}
-
-void put_str(char *str, int *counter){
-	if (!str)
-	{
-		ft_putstr("(null)");
-		(*counter) += 6;
-		return ;
-	}
-	for(int i = 0; i < ft_strlen(str) + 1; i++){
+	while(str[++i]){
 		write(1, &str[i], 1);
 		(*counter)++;
 	}
 }
 
-void put_nbr(int n, int *counter){
-	if (n == -2147483648){
-		ft_putstr("-2147483648");
+void ft_put_nbr(int d, int *counter){
+	if (d == -2147483648){
+		write(1, "-2147483648", 11);
 		(*counter) += 11;
+		return ;
 	}
-	else {
-		ft_putnbr(n);
-		(*counter) += ft_nbrlen(n);
+	if (d < 0){
+		d = -d;
+		write(1, "-", 1);
+		(*counter)++;
 	}
-	return ;
+	if (d > 9){
+		ft_put_nbr(d / 10, counter);
+		ft_put_nbr(d % 10, counter);
+	}else{
+		char c = d + '0';
+		write(1, &c, 1);
+		(*counter)++;
+	}
 }
 
-void put_hexa(int n, int *counter){
+void ft_put_hexa(int d, int *counter){
 	char *base = "0123456789abcdef";
-
-	if (n > 16)
-		put_hexa(n / 16, counter);
-	ft_putchar(base[n % 16]);
+	if (d >= 16)
+		ft_put_hexa(d / 16, counter);
+	write(1, &base[d % 16], 1);
 	(*counter)++;
 }
 
-void	ft_putchar(char c){
-	write(1, &c, 1);
-}
-void	ft_putstr(char *str){
-	write(1, str, ft_strlen(str));
-}
-int	ft_strlen(char *str){
+
+
+int ft_printf(const char *str, ...){
+	va_list list;
 	int i = 0;
-	while (str[i])
-		i++;
-	return (i);
+	int counter = 0;
+	int d;
+	char *s;
+
+	va_start(list, str);
+	while(str[i]){
+		if (str[i] == '%' && str[i + 1]){
+			switch (str[i + 1]){
+				case 's':
+					s = va_arg(list, char *);
+					ft_put_str(s, &counter);
+					i += 2;
+					break;
+				case 'd':
+					d = va_arg(list, int);
+					ft_put_nbr(d, &counter);
+					i += 2;
+					break;
+				case 'x':
+					d = va_arg(list, int);
+					ft_put_hexa(d, &counter);
+					i += 2;
+					break;
+			}
+		}
+		else{
+			write(1, &str[i], 1);
+			counter++;
+			i++;
+		}
+	}
+	return counter;
 }
 
-int ft_nbrlen(int n){
-	int len = 0;
-	if (n < 0){
-		len = 1;
-		n = -n;
-	}
-	while(n){
-		len++;
-		n /= 10;
-	}
-	return len;
-}
 
-void ft_putnbr(int n){
-	if (n == -2147483648){
-		write(1, "-2147483648", ft_strlen("-2147483648"));
-	}else if (n < 0){
-		ft_putchar('-');
-		ft_putnbr(-n);
-	}else if (n > 9){
-		ft_putnbr(n / 10);
-		ft_putnbr(n % 10);
-	}else{
-		ft_putchar(n + '0');
-	}
+int main(){
+	int mine, orig;
+
+	mine = ft_printf("%s\n", "toto");
+	orig = printf("%s\n", "toto");
+	if(mine == orig)
+		ft_printf("1, TRUE\n");
+
+	mine = ft_printf("Magic %s is %d\n", "number", 42);
+	orig = printf("Magic %s is %d\n", "number", 42);
+	if(mine == orig)
+		ft_printf("2, TRUE\n");
+
+	mine = ft_printf("Hexadecimal for %d is %x\n", 32, 32);
+	orig = printf("Hexadecimal for %d is %x\n", 32, 32);
+	if(mine == orig)
+		ft_printf("3, TRUE\n");
+	return 0;
 }

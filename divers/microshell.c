@@ -64,11 +64,15 @@ void execute_pipe(char **cmd, char **next_cmd, char **env){
     kill(pid_2, SIGKILL);
 }
 
-
-
 void execute_command(char **cmd, char **env){
 	if (!cmd || !cmd[0])
         return;
+
+	if (strcmp(cmd[0], "cd") == 0) {
+		ft_cd(cmd);
+		return;
+	}
+	// Fork and execute the command
 	pid_t pid_1 = fork();
 	if (pid_1 == -1){
         perror("error: fatal");
@@ -120,6 +124,17 @@ void free_tab(char **tab) {
     for (int i = 0; tab[i]; i++)
         free(tab[i]);
     free(tab);
+}
+
+
+void ft_cd(char **cmd){
+	if (cmd[1] == NULL){
+		fprintf(stderr, "error: cd: bad arguments\n");
+		return;
+	}
+	if (chdir(cmd[1]) == -1){
+		perror("error: cd");
+	}
 }
 
 int main(int argc, char **argv, char **env) {

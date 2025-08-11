@@ -1,0 +1,63 @@
+#############################
+#	Fonctionnement HTTP		#
+#############################
+
+Un client envoie une requete HTTP a un serveur qui lui renvoie une reponse
+
+# STRUCTURE REQUETE
+
+GET /index.html HTTP/1.1     ← ligne de requête
+Host: www.exemple.com        ← header
+User-Agent: Mozilla/5.0      ← header
+Accept: text/html            ← header
+Accept-Language: fr-FR,...   ← header
+Connection: keep-alive       ← header
+                             ← ligne vide
+[pas de body]                ← corps vide
+
+_ La ligne de requete est l'element principal qui correspond a l'action qu'on a envie de realiser.
+	methode, ressource, version
+	GET : demande une ressource
+	POST : envoie des donnees au serveur (creation ou traitement)
+	DELETE : supprimer une ressource
+
+_ Le header est un ensemble d'option et de precision.
+	type de contenu, tailles, cookies...
+
+_ Le body est l'ensemble des donnees envoyees par le client au server (utilise seulement si necessaire). Avec un GET il sera vide tandis qu'avec un POST ou PUT il y  aura quelque chose.
+POST /form HTTP/1.1
+Host: www.exemple.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 27
+
+nom=Luc&message=Bonjour
+
+
+# STRUCTURE REPONSE
+
+HTTP/1.1 200 OK							← ligne de status
+Date: Mon, 11 Aug 2025 15:20:00 GMT		← header
+Server: MonServeurHTTP/1.0				← header
+Content-Type: text/html; charset=UTF-8	← header
+Content-Length: 125						← header
+Connection: keep-alive					← header
+										← ligne vide
+<!DOCTYPE html>							← corps
+<html>									← corps
+<head><title>Exemple</title></head>		← corps
+<body>									← corps
+<h1>Bienvenue sur mon site</h1>			← corps
+<p>Ceci est une page HTML.</p>			← corps
+</body>									← corps
+</html>									← corps
+
+_ La ligne de status est le code de retour avec un message.
+	Code important :
+		200 : OK
+		404 : Not Found, le serveur ne trouve pas ce qui est demande
+		405 : Method not allowed, le serveur connait la requete mais elle n'est pas supportee par la ressource cible
+		500 : Internal Server Error, le serveur a un probleme inattendu qui l'empeche de repondre a la requete
+
+_ Le header donne des informations sur la reponse.
+
+_ Le body est le contenu renvoye par le serveur.

@@ -14,6 +14,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+using namespace std;
 
 int main(){
 	int server_fd, client_fd;
@@ -23,50 +24,50 @@ int main(){
 
 	server_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_fd < 0) {
-		std::cerr << "Failed to create socket" << std::endl;
+		cerr << "Failed to create socket" << endl;
 		exit(EXIT_FAILURE);
 	}
 
-	std::memset(&address, 0, sizeof(address));
+	memset(&address, 0, sizeof(address));
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
 	address.sin_port = htons(port);
 
 	if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
-		std::cerr << "Failed to bind socket" << std::endl;
+		cerr << "Failed to bind socket" << endl;
 		close(server_fd);
 		exit(EXIT_FAILURE);
 	}
 
 	if (listen(server_fd, 5) < 0) {
-		std::cerr << "Failed to listen on socket" << std::endl;
+		cerr << "Failed to listen on socket" << endl;
 		close(server_fd);
 		exit(EXIT_FAILURE);
 	}
 	client_fd = accept(server_fd, (struct sockaddr *)&address, &addrlen);
 	if (client_fd < 0) {
-		std::cerr << "Failed to accept connection" << std::endl;
+		cerr << "Failed to accept connection" << endl;
 		close(server_fd);
 		exit(EXIT_FAILURE);
 	}
-	std::cout << "Client connected" << std::endl;
+	cout << "Client connected" << endl;
 
 	char buffer[1024];
 	int bytes_read = 1;
 	while(bytes_read > 0) {
 		bytes_read = recv(client_fd, buffer, sizeof(buffer), 0);
 		if (bytes_read < 0) {
-			std::cerr << "Failed to read from socket" << std::endl;
+			cerr << "Failed to read from socket" << endl;
 			break;
 		} else if (bytes_read == 0) {
-			std::cout << "Client disconnected" << std::endl;
+			cout << "Client disconnected" << endl;
 			break;
 		}
 		// send(client_fd, buffer, bytes_read, 0);
 
 		// recv() doesn't put the \0 terminator, so we need to add it
-		std::cout << "Received: " << std::string(buffer, bytes_read);
-		std::memset(buffer, 0, sizeof(buffer)); // Clear the buffer for the next read
+		cout << "Received: " << string(buffer, bytes_read);
+		memset(buffer, 0, sizeof(buffer)); // Clear the buffer for the next read
 	}
 
 	close(client_fd);

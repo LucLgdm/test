@@ -1,6 +1,6 @@
 /*****************************************************************
  * In a first terminal, lunch the server:
- * make lvl2 && ./main
+ * make lvl4 && ./main
  * In a second terminal, you can connect to the server using:
  * nc localhost 8080
  * The server can handle multiple clients without multiprocessing

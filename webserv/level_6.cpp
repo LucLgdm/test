@@ -2,8 +2,8 @@
  * In a first terminal, lunch the server:
  * make lvl5 && ./main
  * In a second terminal, you can connect to the server using:
- * nc localhost 8080
- * This is a server HTTP minimal (GET only).
+ * curl http://localhost:8080/
+ * This is a server HTTP minimal.
  * Objective : read a request HTTP and send an answer formatted
  **********************************************************************/
 
@@ -42,9 +42,44 @@ void* wait_for_exit(void *arg) {
 	return NULL;
 }
 
+void init_server(int *server_fd, struct sockaddr_in *address) {
+    const int port = 8080;
+
+    *server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (*server_fd < 0) {
+        cerr << "Failed to create socket" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    memset(address, 0, sizeof(*address));
+    address->sin_family = AF_INET;
+    address->sin_addr.s_addr = INADDR_ANY;
+    address->sin_port = htons(port);
+
+    int opt = 1;
+    if (setsockopt(*server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        cerr << "setsockopt failed" << endl;
+        close(*server_fd);
+        exit(EXIT_FAILURE);
+    }
+
+    if (bind(*server_fd, (struct sockaddr *)address, sizeof(*address)) < 0) {
+        cerr << "Failed to bind socket" << endl;
+        close(*server_fd);
+        exit(EXIT_FAILURE);
+    }
+
+    if (listen(*server_fd, 5) < 0) {
+        cerr << "Failed to listen on socket" << endl;
+        close(*server_fd);
+        exit(EXIT_FAILURE);
+    }
+}
+
+
 
 int main(){
-	// Quit gracefully
+
 	signal(SIGINT, handle_sigint);
 	pthread_t exit_thread;
 	pthread_create(&exit_thread, NULL, wait_for_exit, NULL);
@@ -52,43 +87,10 @@ int main(){
 
 	int server_fd, client_fd;
 	struct sockaddr_in address;
+	
+	init_server(&server_fd, &address);
+	
 	socklen_t addrlen = sizeof(address);
-	const int port = 8080;
-
-	// INITIALIZATION
-	server_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (server_fd < 0) {
-		cerr << "Failed to create socket" << endl;
-		exit(EXIT_FAILURE);
-	}
-
-	memset(&address, 0, sizeof(address));
-	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = INADDR_ANY;
-	address.sin_port = htons(port);
-
-	int opt = 1;
-	// Set socket options to reuse the address
-	// This is useful to avoid "Address already in use" error when restarting the server
-	// after a short time
-	if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-		std::cerr << "setsockopt failed" << std::endl;
-		close(server_fd);
-		exit(EXIT_FAILURE);
-	}
-
-
-	if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
-		cerr << "Failed to bind socket" << endl;
-		close(server_fd);
-		exit(EXIT_FAILURE);
-	}
-
-	if (listen(server_fd, 5) < 0) {
-		cerr << "Failed to listen on socket" << endl;
-		close(server_fd);
-		exit(EXIT_FAILURE);
-	}
 
 	vector<struct pollfd> fds;
 	struct pollfd pfd;
@@ -96,22 +98,21 @@ int main(){
 	pfd.events = POLLIN;
 	pfd.revents = 0;
 	fds.push_back(pfd);
-	// fds.push_back({server_fd, POLLIN, 0}); Non authorized in C++98...
 
 	while(!stop_flag){
-		int ret = poll(fds.data(), fds.size(), 100); // -1 means infinite timeout, timeout 100ms
+		int ret = poll(fds.data(), fds.size(), 100);
 		if (ret < 0) {
 			if (errno == EINTR) {
-				continue; // Interrupted by a signal, retry
+				continue;
 			} else {
 				cerr << "Poll failed" << endl;
 				close(server_fd);
 				exit(EXIT_FAILURE);
 			}
-		} else if (ret == 0) { // Timeout so never called here
-			continue; // No events
-		} else { // At least one fd is ready to be read or written
-			if (fds[0].revents & POLLIN) { // Socket server is ready to accept a new connection
+		} else if (ret == 0) {
+			continue;
+		} else {
+			if (fds[0].revents & POLLIN) {
 				client_fd = accept(server_fd, (struct sockaddr *)&address, &addrlen);
 				if (client_fd < 0) {
 					cerr << "Failed to accept connection" << endl;
@@ -142,7 +143,7 @@ int main(){
 					} else {
 						buffer[bytes_read] = '\0';
 						cout << "Received: " << buffer << endl;
-						const char body[] = "Hello, world!\nThis is a minimal HTTP server.\nHehehehehehehehehehehehehehehehehehe.\nC'est moi le king !\n";
+						const char body[] = "Hello, world!\nThis is a minimal HTTP server.\nComment est votre blanquette ?\nElle est bonne\n";
 						std::ostringstream oss;
 						oss << "HTTP/1.1 200 OK\r\n"
 							<< "Content-Type: text/plain\r\n"

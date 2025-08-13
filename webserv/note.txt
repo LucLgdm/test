@@ -62,3 +62,113 @@ _ Le header donne des informations sur la reponse.
 
 _ Le body est le contenu renvoye par le serveur.
 
+
+
+Niveau 3 — Communication Client → Serveur
+Exercice 1 — Serveur HTTP minimal (GET)
+
+But : comprendre comment lire une requête HTTP brute et renvoyer une réponse formatée.
+
+    Étapes :
+
+        Partir de ton code « chat room minimal » mais supprimer la partie broadcast.
+
+        Quand recv() reçoit une requête :
+
+            Lire la chaîne complète (elle commence par GET / HTTP/1.1).
+
+            Ignorer le parsing pour l’instant.
+
+            Envoyer une réponse brute :
+
+        HTTP/1.1 200 OK\r\n
+        Content-Type: text/plain\r\n
+        Content-Length: 13\r\n
+        \r\n
+        Hello, world!
+
+    Fermer la connexion après envoi (mode HTTP/1.0).
+
+Test :
+
+    curl -v http://localhost:8080/
+
+Exercice 2 — Serveur HTTP statique
+
+But : servir un fichier du disque.
+
+    Étapes :
+
+        Extraire le chemin demandé de la requête (GET /index.html HTTP/1.1).
+
+        Si /, remplacer par /index.html.
+
+        Lire le fichier avec open() + read().
+
+        Déterminer le Content-Type selon extension :
+
+            .html → text/html
+
+            .txt → text/plain
+
+            .jpg → image/jpeg
+
+            etc.
+
+        Construire la réponse HTTP avec Content-Length = taille du fichier.
+
+        Envoyer le header + contenu du fichier.
+
+        Si le fichier n’existe pas → envoyer un 404 Not Found.
+
+    Test :
+
+    echo "<h1>Hello</h1>" > index.html
+    curl -v http://localhost:8080/
+
+Niveau 4 — Fonctions avancées
+Exercice 3 — Serveur non-bloquant
+
+But : éviter que recv() ou send() bloquent le programme.
+
+    Étapes :
+
+        Utiliser fcntl(sock, F_SETFL, O_NONBLOCK) sur le socket principal et tous les clients.
+
+        Continuer à utiliser poll() pour savoir quand lire/écrire.
+
+        Gérer le fait que recv() peut retourner -1 avec errno == EAGAIN ou EWOULDBLOCK.
+
+Exercice 4 — Timeouts de connexion
+
+But : fermer les clients inactifs.
+
+    Étapes :
+
+        Stocker l’horodatage du dernier message reçu par chaque client.
+
+        Avec poll(timeout), vérifier régulièrement si time(NULL) - last_activity > X.
+
+        Si oui → fermer la connexion.
+
+Exercice 5 — Mini-CGI
+
+But : exécuter un script et renvoyer sa sortie.
+
+    Étapes :
+
+        Si le chemin demandé est /script :
+
+            Créer un pipe.
+
+            fork().
+
+                Dans le fils : rediriger stdout vers le pipe et faire execve() sur script.sh ou python3 script.py.
+
+                Dans le parent : lire la sortie via le pipe.
+
+        Construire une réponse HTTP avec cette sortie comme body.
+
+        Tester avec :
+
+curl http://localhost:8080/script

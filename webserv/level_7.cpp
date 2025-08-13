@@ -91,7 +91,7 @@ std::string get_content_type(const std::string &path) {
 
 
 
-void run_server_loop(int server_fd, struct sockaddr_in *address) {
+void run_server_loop(int server_fd, struct sockaddr_in *address, char *default_file) {
 	int client_fd;
 	socklen_t addrlen = sizeof(*address);
 	vector<struct pollfd> fds;
@@ -150,7 +150,7 @@ void run_server_loop(int server_fd, struct sockaddr_in *address) {
 						char method[8], url[1024];
 						sscanf(buffer, "%s %s", method, url); // Method = GET, url = /path/to/file
 
-						if (strcmp(url, "/") == 0) { strcpy(url, "/test.html"); } // Default file
+						if (strcmp(url, "/") == 0) { strcpy(url, default_file); } // Default file
 						string type = get_content_type(url);
 
 						char path[1024];
@@ -200,7 +200,18 @@ void run_server_loop(int server_fd, struct sockaddr_in *address) {
 	std::cout << "Serveur arrêté proprement." << std::endl;
 }
 
-int main(){
+int main(int argc, char *argv[]) {
+	if (argc != 2) {
+		cerr << "Usage: ./main </file.html>" << endl;
+		return EXIT_FAILURE;
+	}
+
+	char *default_file = argv[1];
+	if (default_file[0] != '/') {
+		cerr << "Error: Default file must be an absolute path." << endl;
+		return EXIT_FAILURE;
+	}
+
 	signal(SIGINT, handle_sigint);
 	pthread_t exit_thread;
 	pthread_create(&exit_thread, NULL, wait_for_exit, NULL);
@@ -209,7 +220,7 @@ int main(){
 	struct sockaddr_in address;
 	init_server(&server_fd, &address);
 
-	run_server_loop(server_fd, &address);
+	run_server_loop(server_fd, &address, default_file);
 
 	pthread_join(exit_thread, NULL);
 	return 0;

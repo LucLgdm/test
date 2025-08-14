@@ -1,19 +1,19 @@
 /**********************************************************************
- * In a first terminal, lunch the server:
- * make lvl5 && ./main
- * In a second terminal, you can connect to the server using:
- * curl http://localhost:8080/
- * This is a non bloking HTTP server.
- * Objective : read a file from the disk and send it to the client
+ * Non-blocking HTTP server (C++98, poll, single-threaded)
+ *
+ * - Sert des fichiers statiques du disque (GET /fichier)
+ * - Gère plusieurs clients simultanés avec poll()
+ * - Envoie les fichiers en plusieurs morceaux (non bloquant)
+ * - Ferme explicitement chaque connexion après la réponse (Connection: close)
+ * - Log chaque événement important (ACCEPT, RECV, 404, CLOSE...)
+ * - Gère la déconnexion propre des clients (navigateur, curl, nc...)
+ *
+ * Utilisation :
+ *   1. make lvl8 && ./main /chemin/absolu/fichier.html
+ *   2. curl http://localhost:8080/ ou ouvrir dans un navigateur
  **********************************************************************/
 
-#include <iostream>
-#include <cstring>
-#include <cstdlib>
-#include <cstdio>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+ #include <netinet/in.h>
 #include <vector>
 #include <poll.h>
 #include <csignal>

@@ -1,18 +1,18 @@
 /**********************************************************************
- * In a first terminal, lunch the server:
- * make lvl5 && ./main
- * In a second terminal, you can connect to the server using:
- * curl http://localhost:8080/
- * This is a static HTTP server.
- * Objective : read a file from the disk and send it to the client
+ * Static file HTTP server (C++98, poll, single-threaded)
+ *
+ * - Sert des fichiers statiques du disque (GET /fichier)
+ * - Gère plusieurs clients simultanés avec poll()
+ * - Détecte le Content-Type selon l'extension du fichier
+ * - Répond 404 si le fichier n'existe pas
+ * - Ferme la connexion après chaque réponse
+ * - Gère la déconnexion propre des clients (navigateur, curl, nc...)
+ *
+ * Utilisation :
+ *   1. make lvl7 && ./main /chemin/absolu/fichier.html
+ *   2. curl http://localhost:8080/ ou ouvrir dans un navigateur
  **********************************************************************/
 
-#include <iostream>
-#include <cstring>
-#include <cstdlib>
-#include <cstdio>
-#include <unistd.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
 #include <vector>
 #include <poll.h>

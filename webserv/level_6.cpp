@@ -1,10 +1,15 @@
 /**********************************************************************
- * In a first terminal, lunch the server:
- * make lvl5 && ./main
- * In a second terminal, you can connect to the server using:
- * curl http://localhost:8080/
- * This is a server HTTP minimal.
- * Objective : read a request HTTP and send an answer formatted
+ * Minimal HTTP server (C++98, poll, single-threaded)
+ *
+ * - Accepte plusieurs clients avec poll()
+ * - Lit une requête HTTP et envoie une réponse formatée simple
+ * - Répond toujours avec un message texte statique ("Hello, world!... blanquette")
+ * - Ferme la connexion après chaque réponse
+ * - Gère la déconnexion propre des clients (navigateur, curl, nc...)
+ *
+ * Utilisation :
+ *   1. make lvl6 && ./main
+ *   2. curl http://localhost:8080/ ou ouvrir dans un navigateur
  **********************************************************************/
 
 #include <iostream>
@@ -26,54 +31,54 @@ volatile bool stop_flag = false;
 
 void handle_sigint(int signum) {
 	(void)signum;
-    stop_flag = 1;
+	stop_flag = 1;
 }
 
 void* wait_for_exit(void *arg) {
-    (void)arg;
+	(void)arg;
 	cout << "Tape 'q' puis Entrée pour quitter proprement.\n";
-    char c;
-    while (cin >> c) {
-        if (c == 'q') {
-            stop_flag = true;
-            break;
-        }
-    }
+	char c;
+	while (cin >> c) {
+		if (c == 'q') {
+			stop_flag = true;
+			break;
+		}
+	}
 	return NULL;
 }
 
 void init_server(int *server_fd, struct sockaddr_in *address) {
-    const int port = 8080;
+	const int port = 8080;
 
-    *server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (*server_fd < 0) {
-        cerr << "Failed to create socket" << endl;
-        exit(EXIT_FAILURE);
-    }
+	*server_fd = socket(AF_INET, SOCK_STREAM, 0);
+	if (*server_fd < 0) {
+		cerr << "Failed to create socket" << endl;
+		exit(EXIT_FAILURE);
+	}
 
-    memset(address, 0, sizeof(*address));
-    address->sin_family = AF_INET;
-    address->sin_addr.s_addr = INADDR_ANY;
-    address->sin_port = htons(port);
+	memset(address, 0, sizeof(*address));
+	address->sin_family = AF_INET;
+	address->sin_addr.s_addr = INADDR_ANY;
+	address->sin_port = htons(port);
 
-    int opt = 1;
-    if (setsockopt(*server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-        cerr << "setsockopt failed" << endl;
-        close(*server_fd);
-        exit(EXIT_FAILURE);
-    }
+	int opt = 1;
+	if (setsockopt(*server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+		cerr << "setsockopt failed" << endl;
+		close(*server_fd);
+		exit(EXIT_FAILURE);
+	}
 
-    if (bind(*server_fd, (struct sockaddr *)address, sizeof(*address)) < 0) {
-        cerr << "Failed to bind socket" << endl;
-        close(*server_fd);
-        exit(EXIT_FAILURE);
-    }
+	if (bind(*server_fd, (struct sockaddr *)address, sizeof(*address)) < 0) {
+		cerr << "Failed to bind socket" << endl;
+		close(*server_fd);
+		exit(EXIT_FAILURE);
+	}
 
-    if (listen(*server_fd, 5) < 0) {
-        cerr << "Failed to listen on socket" << endl;
-        close(*server_fd);
-        exit(EXIT_FAILURE);
-    }
+	if (listen(*server_fd, 5) < 0) {
+		cerr << "Failed to listen on socket" << endl;
+		close(*server_fd);
+		exit(EXIT_FAILURE);
+	}
 }
 
 
@@ -166,7 +171,7 @@ int main(){
 	pthread_join(exit_thread, NULL);
 
 	for (size_t i = 0; i < fds.size(); ++i)
-        close(fds[i].fd);
-    std::cout << "Serveur arrêté proprement." << std::endl;
+		close(fds[i].fd);
+	std::cout << "Serveur arrêté proprement." << std::endl;
 	return 0;
 }

@@ -13,6 +13,8 @@
  *   2. curl http://localhost:8080/ ou ouvrir dans un navigateur
  **********************************************************************/
 
+ #include <iostream>
+#include <cstring>
 #include <netinet/in.h>
 #include <vector>
 #include <poll.h>

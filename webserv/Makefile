@@ -11,6 +11,7 @@ SRC_6 = level_6.cpp
 SRC_7 = level_7.cpp
 SRC_8 = level_8.cpp
 SRC_9 = level_9.cpp
+SRC_10 = level_10.cpp
 OBJDIR = objs
 OBJ = $(SRC:%.cpp=$(OBJDIR)/%.o)
 
@@ -59,6 +60,10 @@ lvl8:
 lvl9:
 	@$(CPP) $(FLAGS) $(SRC_9) -o $(NAME)
 	@echo "\033[32m$(NAME) created for niveau 9 !\033[0m"
+
+lvl10:
+	@$(CPP) $(FLAGS) $(SRC_10) -o $(NAME)
+	@echo "\033[32m$(NAME) created for niveau 10 !\033[0m"
 
 clean:
 	@rm -rf $(OBJDIR)

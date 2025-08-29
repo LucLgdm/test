@@ -172,3 +172,36 @@ But : exécuter un script et renvoyer sa sortie.
         Tester avec :
 
 curl http://localhost:8080/script
+
+
+1. Cas simple (un seul CGI)
+
+	Tu vois que l’URL demandée est /script.py.
+	Tu fork(), dup2(pipe[1], STDOUT_FILENO) dans le fils.
+	Tu fais execve("/usr/bin/python3", ["python3", "script.py"], env).
+	Le père lit dans le pipe et renvoie la sortie HTTP.
+
+2. Cas multi-CGI (plusieurs scripts)
+
+	👉 La différence, c’est juste :
+	plusieurs chemins ( /script1.py, /script2.sh, /cgi-bin/machin … ).
+	donc tu dois faire une table de correspondance entre l’URL demandée et le binaire à exécuter.
+	Exemple :
+		struct CgiConfig {
+			std::string path;       // chemin URL ex: "/script1.py"
+			std::string exec_path;  // interpréteur ex: "/usr/bin/python3"
+			std::string file;       // fichier script ex: "script1.py"
+		};
+	Tu gardes ça dans un std::vector<CgiConfig> chargé depuis ton fichier de config.
+
+3. Gestion simultanée
+
+	Comme ton serveur est non-bloquant avec poll(), tu peux avoir plusieurs pipes actifs en même temps (un pour chaque CGI lancé).
+	Chaque client qui appelle un CGI → tu fork(), tu l’associes à un pipe, et tu continues la boucle poll.
+	Quand le pipe devient lisible, tu sais que la sortie du CGI est prête et tu envoies la réponse au client concerné.
+
+4. Ce qui change par rapport à 1 seul CGI
+
+	Tu as une map fd → client pour savoir quel client attend la sortie du CGI.
+	Tu as une map pid → CGI en cours pour gérer la fin des processus enfants (éviter les zombies avec waitpid).
+	Tu dois construire dynamiquement argv et envp selon le script exécuté et la requête.

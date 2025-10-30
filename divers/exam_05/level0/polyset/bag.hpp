@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bits/stdc++.h>
+
 class bag {
 public:
 	virtual void insert (int) = 0;

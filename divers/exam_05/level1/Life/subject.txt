@@ -21,7 +21,7 @@ Once end of file is reached, your program must simulate a game of life on this
 board and print the result in stdout (each cell alive will be represented by
 the character 'O' and each dead cell will be represented by a space)
 each cell outside of the array will be considered dead
-Example:
+Example:8
 $> echo 'sdxddssaaww' | ./a.out 5 5 0 | cat -e
 $
 OOO $
@@ -30,23 +30,23 @@ OOO $
 $
 $> echo 'sdxssdswdxddddsxaadwxwdxwaa' | ./a.out 10 6 0 | cat -e
 $
-O OOO $
-O O $
-OOO O $
-O OOO $
+ O   OOO $
+ O     O $
+ OOO  O $
+  O  OOO $
 $
 $> echo 'dxss' | ./a.out 3 3 0 | cat -e
-O $
-O $
-O $
+ O $
+ O $
+ O $
 $> echo 'dxss' | ./a.out 3 3 1 | cat -e
 $
 OOO$
 $
 $> echo 'dxss' | ./a.out 3 3 2 | cat -e
-O $
-O $
-O $
+ O $
+ O $
+ O $
 
 [TR]
 

@@ -105,7 +105,6 @@ void play() {
 	}
 }
 
-
 void print_grid() {
 	int pen = 1;
 	int **grid = *(get_grid());

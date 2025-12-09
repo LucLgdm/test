@@ -88,7 +88,7 @@ ostream &operator<<(ostream &os, const Vect2 &vec) {
 }
 
 Vect2 operator+(const Vect2 &a, const Vect2& b) {
-	return Vect2(a.get_x() + b.get_y(), a.get_y() + b.get_y());
+	return Vect2(a.get_x() + b.get_x(), a.get_y() + b.get_y());
 }
 
 Vect2 operator-(const Vect2& a, const Vect2& b) {

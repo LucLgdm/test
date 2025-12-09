@@ -53,6 +53,12 @@ bool parse(int argc, char *file) {
 		fclose(f);
 		return false;
 	}
+
+	if (map->height <= 0) {
+		write(2, "Error: Invalid map dimensions\n", 30);
+		return false;
+	}
+
 	if (map->empty == map->obstacle || map->empty == map->full || map->obstacle == map->full) {
 		write(2, "Error: Invalid header characters\n", 30);
 		fclose(f);
@@ -89,6 +95,10 @@ bool parse(int argc, char *file) {
 		}
 		if (line_num == 1) {
 			map->width = ft_strlen(buffer);
+			if (map->width <= 0) {
+				write(2, "Error: Invalid map dimensions\n", 30);
+				return false;
+			}
 		}
 
 		if (ft_strlen(buffer) != map->width) {
@@ -154,14 +164,7 @@ int ft_strlen(const char *str) {
 bool check_map() {
 	t_map *map = get_map();
 
-
-	if (map->height <= 0 || map->width <= 0) {
-		write(2, "Error: Invalid map dimensions\n", 30);
-		return false;
-	}
-
 	for(int i = 0; i < map->height; i++) {
-		printf("segfault ici ? %d\n", i);
 		for(int j = 0; j < map->width; j++) {
 			if (map->map[i][j] != map->empty && map->map[i][j] != map->obstacle) {
 				write(2, "Error: Invalid character in map\n", 32);
@@ -169,7 +172,6 @@ bool check_map() {
 			}
 		}
 	}
-	printf("segfault ici ?\n");
 
 	return true;
 }

@@ -1,30 +1,7 @@
-#include <iostream>
-using namespace std;
 #include <bits/stdc++.h>
-
-void print_bits(unsigned char octet) {
-	cout << setw(3) << (int)octet << " = ";
-	for(int i = 7; i >= 0; i--)	cout << ((octet & (1 << i)) ? "1" : "0");
-	cout << endl;
-}
+using namespace std;
 
 int main() {
-	int n = 0;
-	
-	n = n | 2;
-	print_bits(n);
-	n = n | 4;
-	print_bits(n);
-	n = n | 8;
-	print_bits(n);
-	
-	cout << endl;
-	n = 73;
-	int m = 255;
-	print_bits(n); print_bits(m);
-	cout << "n | m : "; print_bits(n | m);
-	cout << "n & m : "; print_bits(n & m);
-	cout << "n ^ m : "; print_bits(n ^ m);
 	
 	for(int i = 1; i < 250; i += 10) {
 		cout << setw(5) << left << "\x1b[38;5;" << i << "mHello World!\033[m" << " : " << setw(3) << i << " ";
